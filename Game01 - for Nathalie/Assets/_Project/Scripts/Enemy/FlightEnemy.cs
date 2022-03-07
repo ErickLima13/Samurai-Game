@@ -4,22 +4,24 @@ using UnityEngine;
 
 public class FlightEnemy : MonoBehaviour
 {
-    public float health;
     public float damage;
     public float speed = 2f;
     public float stopDistance;
+    public float range;
 
     public bool isRight;
+
+    public Status status;
 
     public Rigidbody2D rig;
 
     public Animator anim;
 
+    public GameObject potionPrefab;
+
     private bool isDead;
 
     private Transform player;
-
-    public SpawnEnemy spawnEnemy;
 
     private void Initialization()
     {
@@ -97,29 +99,31 @@ public class FlightEnemy : MonoBehaviour
         }
     } 
     
-    public void onHit()//quando o inimigo morre
+    public void onHit()
     {
-        health--;
-
-        if (health <= 0)
+        if (status.health <= 0)
         {
             damage = 0;
             isDead = true;
+
+            range = Random.Range(0, 20);
+
+            if(range % 5 == 0)
+            {
+                Instantiate(potionPrefab, transform.position, transform.rotation);
+                print(range);
+            }
+
             speed = 0f;
             anim.SetTrigger("death");
             Destroy(gameObject, 0.5f);
             rig.gravityScale = 2f;
-        }
-        else
-        {
-            anim.SetTrigger("hit");
         }
     }
 
     public void Damage()
     {
         player.GetComponent<Player>().OnHit(damage);
-        print("ataquei");
     }
 }
 

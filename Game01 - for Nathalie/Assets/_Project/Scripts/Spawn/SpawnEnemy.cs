@@ -4,14 +4,24 @@ using UnityEngine;
 
 public class SpawnEnemy : MonoBehaviour
 {
+    public delegate void Boss();
+    public static event Boss BossArrived;
+
     public Transform[] positions;
+
+    public float radius;
 
     public int enemiesCount;
     public int waveNumber = 1;
 
+    public bool isBoss;
+
     public GameObject enemyPrefab;
+    public GameObject bossPrefab;
 
     private GameObject player;
+
+    
 
     private void Initialization()
     {
@@ -28,9 +38,12 @@ public class SpawnEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+
         if (!player.GetComponent<Player>().isDead)
         {
             SpawnEnemies();
+            
         }
     }
 
@@ -38,20 +51,48 @@ public class SpawnEnemy : MonoBehaviour
     {
         enemiesCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
 
-        if (enemiesCount == 0)
+        if (enemiesCount == 0 && !isBoss)
         {
             waveNumber++;
             SpawnEnemyWave(waveNumber);
         }
+
+       
     }
 
     private void SpawnEnemyWave(int enemiesToSpawn)
     {
-        //int indexSpawnPoints = Random.Range(0, positions.Length);
-
         for (int i = 0; i < enemiesToSpawn; i++)
         {
             Instantiate(enemyPrefab, GenerateSpawnPosition(), transform.rotation);
+        }
+
+        if (!isBoss)
+        {
+            SpawnBoss();
+        }
+
+    }
+
+    private void SpawnBoss()
+    {
+        if(waveNumber % 2 == 0) // colocar divisor de 5 cinco apos fazer evento;
+        {
+            if (BossArrived != null)
+            {
+                BossArrived();
+                isBoss = true;
+                Instantiate(bossPrefab, bossPrefab.transform.position, transform.rotation);
+
+
+                
+                GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Enemy");
+
+                for (var i = 0; i < gameObjects.Length; i++)
+                {
+                    Destroy(gameObjects[i]);
+                }
+            }
         }
     }
 
@@ -59,10 +100,10 @@ public class SpawnEnemy : MonoBehaviour
     {
         int indexSpawnPoints = Random.Range(0, positions.Length);
 
-        float spawnPosX = Random.Range(-15, 30);
-        float spawnPosY = Random.Range(-3f, -4.3f);
+        float spawnPosX = Random.Range(-20, 30);
+        float spawnPosY = Random.Range(-3f, -4.10f);
 
-        Vector3 randomPos = new Vector3(positions[indexSpawnPoints].transform.position.x, spawnPosY, 0);
+        Vector3 randomPos = new Vector3(spawnPosX, spawnPosY, 0);
 
         return randomPos;
     }

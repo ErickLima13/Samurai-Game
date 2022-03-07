@@ -7,13 +7,15 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
     [Header("Atributes")]
-    public float health;
     public float speed;
     public float jumpForce;
     public float atkRadius;
     public float direction;
+    public float recoveryTime;
+    public float damage;
 
     public bool isDead;
+    public bool noDamage;
 
     [Header("Components")]
     public Rigidbody2D rig;
@@ -22,6 +24,7 @@ public class Player : MonoBehaviour
     public LayerMask enemyLayer;
     public Image healthBar;
     public GameController gc;
+    public SpriteRenderer SpriteRenderer;
 
     [Header("Audio Settings")]
     public AudioSource audioSource;
@@ -30,6 +33,17 @@ public class Player : MonoBehaviour
     private bool isJumping;
     private bool isAttacking;
 
+    private Status status;
+
+    private void Initialization()
+    {
+        status = GetComponent<Status>();
+    }
+    private void Start()
+    {
+        Initialization();
+    }
+
     void Update()
     {
         if (isDead == false)
@@ -37,7 +51,6 @@ public class Player : MonoBehaviour
             Jump();
             onAttack();
         }
-
     }
 
     void Jump()
@@ -50,7 +63,6 @@ public class Player : MonoBehaviour
                 rig.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                 isJumping = true;
             }
-
         }
     }
 
@@ -70,7 +82,7 @@ public class Player : MonoBehaviour
         Collider2D hit = Physics2D.OverlapCircle(firePoint.position, atkRadius, enemyLayer);
         if (hit != null)
         {
-            hit.GetComponent<FlightEnemy>().onHit();
+            hit.GetComponent<Status>().TakeDamage(damage);
         }
     }
 
@@ -85,20 +97,37 @@ public class Player : MonoBehaviour
         isAttacking = false;
     }
 
-    public void OnHit(float damage)//faz o player sofrer dano
+    public void OnHit(float value)//faz o player sofrer dano
     {
-        if (!isDead)
+        if (!noDamage && !isDead)
         {
+            StartCoroutine(HitDelay());
             anim.SetTrigger("hit");
-            health -= damage;
-            healthBar.fillAmount = health / 100;
+            status.health -= value;
+            healthBar.fillAmount = status.health / 100;
             GameOver();
         }
     }
 
+    private IEnumerator HitDelay()
+    {
+        noDamage = true;
+        yield return new WaitForSeconds(recoveryTime);
+
+        for (int i = 0; i < 5; i++)
+        {
+            SpriteRenderer.enabled = false;
+            yield return new WaitForSeconds(0.2f);
+            SpriteRenderer.enabled = true;
+            yield return new WaitForSeconds(0.2f);
+        }
+
+        noDamage = false;
+    }
+
     void GameOver()
     {
-        if (health <= 0)
+        if (status.health <= 0)
         {
             anim.SetTrigger("die");
             isDead = true;
