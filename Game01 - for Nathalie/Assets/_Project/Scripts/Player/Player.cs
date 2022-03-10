@@ -93,7 +93,7 @@ public class Player : MonoBehaviour
 
     IEnumerator OnAttacking()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.6f);
         isAttacking = false;
     }
 
@@ -114,7 +114,7 @@ public class Player : MonoBehaviour
         noDamage = true;
         yield return new WaitForSeconds(recoveryTime);
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 2; i++)
         {
             SpriteRenderer.enabled = false;
             yield return new WaitForSeconds(0.2f);

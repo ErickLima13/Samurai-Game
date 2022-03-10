@@ -16,21 +16,20 @@ public class SpawnEnemy : MonoBehaviour
 
     public bool isBoss;
 
-    public GameObject enemyPrefab;
-    public GameObject bossPrefab;
+    private GameObject enemyPrefab;
+    private GameObject bossPrefab;
 
     private GameObject player;
 
-    
-
     private void Initialization()
     {
+        bossPrefab = Resources.Load<GameObject>("Skeleton");
+        enemyPrefab = Resources.Load<GameObject>("Flight_enemy");
         player = GameObject.FindGameObjectWithTag("Player");
         SpawnEnemyWave(waveNumber);
     }
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         Initialization();
     }
@@ -38,12 +37,9 @@ public class SpawnEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-
         if (!player.GetComponent<Player>().isDead)
         {
-            SpawnEnemies();
-            
+            SpawnEnemies();   
         }
     }
 
@@ -56,8 +52,6 @@ public class SpawnEnemy : MonoBehaviour
             waveNumber++;
             SpawnEnemyWave(waveNumber);
         }
-
-       
     }
 
     private void SpawnEnemyWave(int enemiesToSpawn)
@@ -80,17 +74,18 @@ public class SpawnEnemy : MonoBehaviour
         {
             if (BossArrived != null)
             {
-                BossArrived();
                 isBoss = true;
                 Instantiate(bossPrefab, bossPrefab.transform.position, transform.rotation);
 
-
-                
                 GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Enemy");
 
                 for (var i = 0; i < gameObjects.Length; i++)
                 {
                     Destroy(gameObjects[i]);
+                }
+                if (isBoss)
+                {
+                    BossArrived();
                 }
             }
         }

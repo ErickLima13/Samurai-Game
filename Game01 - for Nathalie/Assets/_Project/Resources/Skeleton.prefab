@@ -154,7 +154,7 @@ MonoBehaviour:
   distance: 0.5
   distanceAttack: 0.8
   direction: 1
-  damage: 12
+  damage: 15
   rageHealth: 0
   isDead: 0
   isRight: 1
@@ -254,4 +254,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8d47cfee3c64d94fb65e3a6ca0d3d6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 12
+  damage: 15

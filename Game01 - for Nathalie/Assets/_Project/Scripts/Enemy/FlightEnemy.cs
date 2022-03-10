@@ -17,7 +17,7 @@ public class FlightEnemy : MonoBehaviour
 
     public Animator anim;
 
-    public GameObject potionPrefab;
+    private GameObject potionPrefab;
 
     private bool isDead;
 
@@ -26,6 +26,7 @@ public class FlightEnemy : MonoBehaviour
     private void Initialization()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        potionPrefab = Resources.Load<GameObject>("PotionHealth");
     }
 
     // Start is called before the first frame update

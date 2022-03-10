@@ -9,7 +9,6 @@ public class Skeleton : MonoBehaviour
     public float distance;
     public float distanceAttack;
     public float direction;
-    public float damage;
     public float rageHealth;
 
     public bool isDead;
@@ -23,8 +22,6 @@ public class Skeleton : MonoBehaviour
     public Transform target;
     public Transform groundCheck;
 
-    private Transform player;
-
     private Animator animator;
 
     private SpriteRenderer spriteRenderer;
@@ -33,13 +30,11 @@ public class Skeleton : MonoBehaviour
 
     private void Initialization()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
         spawnEnemy = GameObject.Find("SpawnManager").GetComponent<SpawnEnemy>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         direction = 1f;
         rageHealth = status.health / 2;
-        
     }
 
     // Start is called before the first frame update
@@ -83,13 +78,11 @@ public class Skeleton : MonoBehaviour
 
     private void RageMode()
     {
-
         if(status.health == rageHealth)
         {
             speed = 3f;
             spriteRenderer.color = Color.red;
             animator.Play("AttackRage");
-            print("rage");
         }
     }
 
@@ -113,7 +106,7 @@ public class Skeleton : MonoBehaviour
             speed = 0f;
             animator.SetTrigger("Death");
             spawnEnemy.isBoss = false;
-            Destroy(gameObject, 1f);  
+            Destroy(gameObject, 0.5f);  
         }
     }
 
