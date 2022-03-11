@@ -19,22 +19,10 @@ public class UiController : MonoBehaviour
 
     public GameObject bossHealth;
 
-    private void Initialization()
-    {
-        SpawnEnemy.BossArrived += BossUi;
-    }
-
-    private void Awake()
-    {
-        Initialization();
-    }
-
     // Update is called once per frame
     void Update()
     {
         DisplayUi();
-        boss = GameObject.FindGameObjectWithTag("Boss");
-
     }
 
     private void DisplayUi()
@@ -42,10 +30,13 @@ public class UiController : MonoBehaviour
         waveDisplay.text = spawnEnemy.GetComponent<SpawnEnemy>().waveNumber.ToString();
         enemiesDisplay.text = spawnEnemy.GetComponent<SpawnEnemy>().enemiesCount.ToString();
         healthText.text = player.GetComponent<Status>().health.ToString();
+        boss = GameObject.FindGameObjectWithTag("Boss");
 
         if (boss != null)
         {
-            healthBoss.fillAmount = boss.GetComponent<Status>().health / 30;
+            bossHealth.SetActive(true);
+            healthBoss.fillAmount = boss.GetComponent<Status>().health / boss.GetComponent<Skeleton>().health;
+            counts.SetActive(false);
         }
         
         else if(boss == null)
@@ -53,13 +44,5 @@ public class UiController : MonoBehaviour
             bossHealth.SetActive(false);
             counts.SetActive(true);
         }
-    }
-
-    private void BossUi()
-    {
-        print("vida do boss");
-        boss = GameObject.FindGameObjectWithTag("Boss");
-        bossHealth.SetActive(true);
-        counts.SetActive(false);
     }
 }

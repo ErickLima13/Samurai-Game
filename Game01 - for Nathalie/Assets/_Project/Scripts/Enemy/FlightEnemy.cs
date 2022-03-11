@@ -23,6 +23,9 @@ public class FlightEnemy : MonoBehaviour
 
     private Transform player;
 
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip bite;
+
     private void Initialization()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -90,13 +93,11 @@ public class FlightEnemy : MonoBehaviour
         {
             speed = 0f;
             anim.SetInteger("transition", 1);
-
         }
         else if(distance > stopDistance)
         {
             anim.SetInteger("transition",0);
             speed = 2f;
-
         }
     } 
     
@@ -125,6 +126,7 @@ public class FlightEnemy : MonoBehaviour
     public void Damage()
     {
         player.GetComponent<Player>().OnHit(damage);
+        audioSource.PlayOneShot(bite);
     }
 }
 

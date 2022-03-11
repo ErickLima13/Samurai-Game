@@ -10,6 +10,7 @@ public class Skeleton : MonoBehaviour
     public float distanceAttack;
     public float direction;
     public float rageHealth;
+    public float health;
 
     public bool isDead;
     public bool isRight;
@@ -22,11 +23,17 @@ public class Skeleton : MonoBehaviour
     public Transform target;
     public Transform groundCheck;
 
+    public Attributes attributesBoss;
+
     private Animator animator;
 
     private SpriteRenderer spriteRenderer;
 
     private SpawnEnemy spawnEnemy;
+
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip attack;
+    
 
     private void Initialization()
     {
@@ -35,6 +42,8 @@ public class Skeleton : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         direction = 1f;
         rageHealth = status.health / 2;
+        health = attributesBoss.health;
+        speed = attributesBoss.speed;
     }
 
     // Start is called before the first frame update
@@ -48,7 +57,7 @@ public class Skeleton : MonoBehaviour
     {
         Patrol();
         Attack();
-        RageMode();
+        
     }
 
     private void Patrol()
@@ -78,11 +87,12 @@ public class Skeleton : MonoBehaviour
 
     private void RageMode()
     {
-        if(status.health == rageHealth)
+        if(status.health < rageHealth && !isDead)
         {
             speed = 3f;
             spriteRenderer.color = Color.red;
             animator.Play("AttackRage");
+            audioSource.PlayOneShot(attack);
         }
     }
 
@@ -93,33 +103,61 @@ public class Skeleton : MonoBehaviour
 
         if (playerTarget.collider && !isAttack)
         {
+            audioSource.PlayOneShot(attack);
             StartCoroutine(OnAttacking());
             isAttack = true;
+            
         }
+
+        
     }
 
     public void onHit() 
     {
+        RageMode();
+
         if (status.health <= 0)
         {
             isDead = true;
             speed = 0f;
             animator.SetTrigger("Death");
             spawnEnemy.isBoss = false;
-            Destroy(gameObject, 0.5f);  
+            StartCoroutine(Died());
         }
+    }
+
+    IEnumerator Died()
+    {
+        yield return new WaitForSeconds(0.5f);
+        this.gameObject.SetActive(false);
     }
 
     private IEnumerator OnAttacking()
     {
         animator.SetBool("isAttack",true);
+        
         speed = 0;
         
         yield return new WaitForSeconds(2f);
         animator.SetBool("isAttack", false);
 
         isAttack = false;
-        speed = 2;
+        speed = attributesBoss.speed;
     }
-    
+
+    private void OnEnable()
+    {
+        if (isDead)
+        {
+            status.health = health + spawnEnemy.bossCount;
+            health = status.health;
+            attributesBoss.speed = Random.Range(1f,5f);
+            speed = attributesBoss.speed;
+            rageHealth = health / 2;
+            spriteRenderer.color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+            isDead = false;
+            isAttack = false;
+        }
+    }
+
 }

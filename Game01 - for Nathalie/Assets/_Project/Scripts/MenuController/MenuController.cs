@@ -11,12 +11,21 @@ using UnityEngine.Audio;
 public class MenuController : MonoBehaviour
 {
     public AudioMixer mixer;
+
+    public GameObject controlsPanel;
     
     public void Play()
     {
-        SceneManager.LoadScene(1);
+        StartCoroutine(ShowControls());
         Time.timeScale = 1;
         AudioListener.pause = false;
+    }
+
+    IEnumerator ShowControls()
+    {
+        controlsPanel.SetActive(true);
+        yield return new WaitForSeconds(5f);
+        SceneManager.LoadScene(1);
     }
 
     public void Quit()

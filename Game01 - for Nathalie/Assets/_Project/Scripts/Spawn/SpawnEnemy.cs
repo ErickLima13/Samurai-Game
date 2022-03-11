@@ -4,26 +4,25 @@ using UnityEngine;
 
 public class SpawnEnemy : MonoBehaviour
 {
-    public delegate void Boss();
-    public static event Boss BossArrived;
-
     public Transform[] positions;
 
     public float radius;
 
     public int enemiesCount;
     public int waveNumber = 1;
+    public int bossCount;
 
     public bool isBoss;
 
-    private GameObject enemyPrefab;
-    private GameObject bossPrefab;
+   
+
+    public GameObject bossPrefab;
 
     private GameObject player;
+    private GameObject enemyPrefab;
 
     private void Initialization()
     {
-        bossPrefab = Resources.Load<GameObject>("Skeleton");
         enemyPrefab = Resources.Load<GameObject>("Flight_enemy");
         player = GameObject.FindGameObjectWithTag("Player");
         SpawnEnemyWave(waveNumber);
@@ -41,6 +40,11 @@ public class SpawnEnemy : MonoBehaviour
         {
             SpawnEnemies();   
         }
+
+        if (!isBoss)
+        {
+            SpawnBoss();
+        }
     }
 
     private void SpawnEnemies()
@@ -50,6 +54,7 @@ public class SpawnEnemy : MonoBehaviour
         if (enemiesCount == 0 && !isBoss)
         {
             waveNumber++;
+            
             SpawnEnemyWave(waveNumber);
         }
     }
@@ -60,33 +65,22 @@ public class SpawnEnemy : MonoBehaviour
         {
             Instantiate(enemyPrefab, GenerateSpawnPosition(), transform.rotation);
         }
-
-        if (!isBoss)
-        {
-            SpawnBoss();
-        }
-
     }
 
     private void SpawnBoss()
     {
         if(waveNumber % 2 == 0) // colocar divisor de 5 cinco apos fazer evento;
         {
-            if (BossArrived != null)
+            bossCount += 10;
+            player.GetComponent<Player>().damage++;
+            isBoss = true;
+            bossPrefab.SetActive(true);
+
+            GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Enemy");
+
+            for (var i = 0; i < gameObjects.Length; i++)
             {
-                isBoss = true;
-                Instantiate(bossPrefab, bossPrefab.transform.position, transform.rotation);
-
-                GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Enemy");
-
-                for (var i = 0; i < gameObjects.Length; i++)
-                {
-                    Destroy(gameObjects[i]);
-                }
-                if (isBoss)
-                {
-                    BossArrived();
-                }
+                Destroy(gameObjects[i]);
             }
         }
     }

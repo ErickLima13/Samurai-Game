@@ -29,8 +29,10 @@ public class Player : MonoBehaviour
     [Header("Audio Settings")]
     public AudioSource audioSource;
     public AudioClip sfx;
+    public AudioClip takeDamage;
 
     private bool isJumping;
+    public bool isGrounded;
     private bool isAttacking;
 
     private Status status;
@@ -53,15 +55,21 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void LateUpdate()
+    {
+        anim.SetFloat("yVelocity", rig.velocity.y);
+        anim.SetBool("isGrounded", isGrounded);
+    }
+
     void Jump()
     {
         if (Input.GetButtonDown("Jump"))
         {
             if (isJumping == false)
             {
-                anim.SetInteger("transition", 2);
                 rig.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                 isJumping = true;
+                isGrounded = false;
             }
         }
     }
@@ -105,6 +113,7 @@ public class Player : MonoBehaviour
             anim.SetTrigger("hit");
             status.health -= value;
             healthBar.fillAmount = status.health / 100;
+            audioSource.PlayOneShot(takeDamage);
             GameOver();
         }
     }
@@ -174,6 +183,7 @@ public class Player : MonoBehaviour
         if (collision.gameObject.layer == 8)
         {
             isJumping = false;
+            isGrounded = true;
         }
     }
 }

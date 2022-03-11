@@ -11,6 +11,9 @@ public class GameController : MonoBehaviour
     public GameObject gameOverPanel;
     public GameObject pausedPanel;
 
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip gameOver;
+
     private void Update()
     {
         PauseGame();
@@ -19,13 +22,17 @@ public class GameController : MonoBehaviour
     public void ShowGameOver()
     {
         gameOverPanel.SetActive(true);
-        AudioListener.pause = true;
+        audioSource.clip = null;
+        audioSource.PlayOneShot(gameOver);
+        
+
     }
 
     public void RestartGame()
     {
         SceneManager.LoadScene(1,LoadSceneMode.Single);
-        AudioListener.pause = false;
+        AudioListener.pause = true;
+        
     }
 
     public void MainMenu()
