@@ -16,7 +16,6 @@ public class UiController : MonoBehaviour
     public GameObject player;
     public GameObject boss;
     public GameObject counts;
-
     public GameObject bossHealth;
 
     // Update is called once per frame

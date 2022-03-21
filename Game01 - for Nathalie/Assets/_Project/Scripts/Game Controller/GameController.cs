@@ -24,15 +24,12 @@ public class GameController : MonoBehaviour
         gameOverPanel.SetActive(true);
         audioSource.clip = null;
         audioSource.PlayOneShot(gameOver);
-        
-
     }
 
     public void RestartGame()
     {
         SceneManager.LoadScene(1,LoadSceneMode.Single);
         AudioListener.pause = true;
-        
     }
 
     public void MainMenu()
@@ -65,6 +62,5 @@ public class GameController : MonoBehaviour
         Time.timeScale = 1;
         pausedPanel.SetActive(false);
         AudioListener.pause = false;
-
     }
 }

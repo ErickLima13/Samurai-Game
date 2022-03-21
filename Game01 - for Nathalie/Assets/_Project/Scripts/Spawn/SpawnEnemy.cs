@@ -14,8 +14,6 @@ public class SpawnEnemy : MonoBehaviour
 
     public bool isBoss;
 
-   
-
     public GameObject bossPrefab;
 
     private GameObject player;
@@ -33,7 +31,6 @@ public class SpawnEnemy : MonoBehaviour
         Initialization();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!player.GetComponent<Player>().isDead)
@@ -69,7 +66,7 @@ public class SpawnEnemy : MonoBehaviour
 
     private void SpawnBoss()
     {
-        if(waveNumber % 2 == 0) // colocar divisor de 5 cinco apos fazer evento;
+        if(waveNumber % 5 == 0) 
         {
             bossCount += 10;
             player.GetComponent<Player>().damage++;
@@ -88,12 +85,9 @@ public class SpawnEnemy : MonoBehaviour
     private Vector3 GenerateSpawnPosition()
     {
         int indexSpawnPoints = Random.Range(0, positions.Length);
-
         float spawnPosX = Random.Range(-20, 30);
         float spawnPosY = Random.Range(-3f, -4.10f);
-
         Vector3 randomPos = new Vector3(spawnPosX, spawnPosY, 0);
-
         return randomPos;
     }
 }

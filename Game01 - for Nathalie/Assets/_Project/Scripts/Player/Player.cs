@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
 
     public bool isDead;
     public bool noDamage;
+    public bool isGrounded;
 
     [Header("Components")]
     public Rigidbody2D rig;
@@ -32,7 +33,6 @@ public class Player : MonoBehaviour
     public AudioClip takeDamage;
 
     private bool isJumping;
-    public bool isGrounded;
     private bool isAttacking;
 
     private Status status;

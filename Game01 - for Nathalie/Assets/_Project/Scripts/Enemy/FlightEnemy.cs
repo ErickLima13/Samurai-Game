@@ -32,13 +32,11 @@ public class FlightEnemy : MonoBehaviour
         potionPrefab = Resources.Load<GameObject>("PotionHealth");
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         Initialization();
     }
 
-    // Update is called once per frame
     void Update()
     {
         Flip();

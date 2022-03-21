@@ -34,7 +34,6 @@ public class Skeleton : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip attack;
     
-
     private void Initialization()
     {
         spawnEnemy = GameObject.Find("SpawnManager").GetComponent<SpawnEnemy>();
@@ -57,7 +56,6 @@ public class Skeleton : MonoBehaviour
     {
         Patrol();
         Attack();
-        
     }
 
     private void Patrol()
@@ -108,14 +106,11 @@ public class Skeleton : MonoBehaviour
             isAttack = true;
             
         }
-
-        
     }
 
     public void onHit() 
     {
         RageMode();
-
         if (status.health <= 0)
         {
             isDead = true;
@@ -135,12 +130,9 @@ public class Skeleton : MonoBehaviour
     private IEnumerator OnAttacking()
     {
         animator.SetBool("isAttack",true);
-        
         speed = 0;
-        
         yield return new WaitForSeconds(2f);
         animator.SetBool("isAttack", false);
-
         isAttack = false;
         speed = attributesBoss.speed;
     }
@@ -159,5 +151,4 @@ public class Skeleton : MonoBehaviour
             isAttack = false;
         }
     }
-
 }
